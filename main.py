@@ -1,19 +1,14 @@
-# Make flask initialization
+import webhooks
+import display
+import threading
+import multiprocessing
 
-from flask import Flask, request, Response
+import os
+os.environ["SDL_VIDEO_CENTERED"] = "1"
 
-app = Flask(__name__)
-
-@app.route('/hook/temperature', methods=['POST'])
-def temperature():
-    if request.method == 'POST':
-        data = request.json
-        
-        if "value" not in data:
-            return ("'value' not found", 400)
-        
-        print(data)
-        print("Received:", "temperature:", data['value'])
-        return ""
-
-app.run(host='0.0.0.0', port=8000)
+if __name__ == "__main__":
+    THWebhooks = multiprocessing.Process(target=webhooks.setup)
+    THWebhooks.start()
+    
+    THDisplay = multiprocessing.Process(target=display.setup)
+    THDisplay.start()
